@@ -13,8 +13,8 @@ timeout /t 2 /nobreak >nul
 REM Open LinkedIn
 start https://www.linkedin.com/feed/
 
-REM Wait for 1 equal seconed
-timeout /t 60 /nobreak >nul
+REM Wait for 1 equal 1seconed-->500 = 15 minutes
+timeout /t 900 /nobreak >nul
 
 REM taskkill /f /im chrome.exe
 

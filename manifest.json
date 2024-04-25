@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+    "name": "AceAlBastoni",
+    "version": "1.0",
+    "description": "A simple extension to greet when visiting LinkedIn.",
+    "permissions":["activeTab"],
+    "background": {
+      "service_worker": "background.js"
+     
+    },
+    
+    "icons": {
+      "16": "icon16.png",
+      "19": "icon19.png",
+      "32": "icon32.png",
+      "38": "icon38.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    },
+  
+    "content_scripts": [
+  {
+    "matches": ["*://*.linkedin.com/*"],
+    "js": ["content.js","acealbastoni.js"]
+  }
+]
+
+  }
+  //["https://www.linkedin.com/feed/*"],
+  //"matches": ["*://*/*linkedin*"],

@@ -314,7 +314,7 @@ function updateStatusMessage() {
                 <div id="hourHand" style="position: absolute; top: 50%; left: 50%; width: 2px; height: 60%; background-color: ${speedometerColor}; transform-origin: 0% 50%; transition: transform 0.5s;"></div>
                 <div id="minuteHand" style="position: absolute; top: 50%; left: 50%; width: 80%; height: 2px; background-color: ${speedometerColor}; transform-origin: 100% 50%; transition: transform 0.5s;"></div>
             </div>
-        </div>${localStorage.getItem('DurationScrappingTime')}
+        </div>${localStorage.getItem('DurationScrappingTime')}  ==========>${JSON.parse(localStorage.getItem('NEXT_URL')).index}
     `;
     // Update clock hands rotation based on speed
     const hourHand = document.getElementById('hourHand');
@@ -362,7 +362,7 @@ setInterval(() => {
 ///new
 function handleScroll() {
     downFile('Force Download');
-    window.location.href = localStorage.getItem('NEXT_URL');
+    window.location.href = JSON.parse(localStorage.getItem('NEXT_URL')).url;
     var contentElement = document.querySelector('.scaffold-finite-scroll__content');
     if (contentElement) {
         downFile();

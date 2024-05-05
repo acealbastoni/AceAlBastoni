@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-    "name": "AceAlBastoni",
+    "name": "AceAlBastoni(1.0-SNAPSHOT)",
     "version": "1.0",
-    "description": "A simple extension to greet when visiting LinkedIn.",
+    "description": "Scrapping Data form LinkedIn.",
     "permissions":["activeTab"],
     "background": {
       "service_worker": "background.js"

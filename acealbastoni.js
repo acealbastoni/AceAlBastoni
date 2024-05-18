@@ -23,7 +23,7 @@ let previousSeparatorCount = 0; // Variable to store the previous separator coun
 let separatorCount = 0;
 var lastRunTimestamp = getCurrentTimestamp();
 const startTime = Date.now();
-const showMoreFeedUpdates='Show more feed updates';
+var showMoreFeedUpdates='Show more feed updates';
 // var DurationScrappingTime = localStorage.getItem('DurationScrappingTime') ? parseInt(localStorage.getItem('DurationScrappingTime')) :
 // localStorage.setItem('DurationScrappingTime',parseInt(1000));
 
@@ -166,9 +166,11 @@ function handleKeyDown(event) {
 
         if (sKeyPressed) {
             // Set scrollIncrement to 0 if 's' is pressed
+            showMoreFeedUpdates='Show more feed updatesX';
             scrollIncrement = 0;
             clearInterval(scrollInterval);
         } else {
+            showMoreFeedUpdates='Show more feed updates';
             // Reset scrollIncrement to its original value if 's' is pressed again
             scrollIncrement = originalScrollIncrement;
             scrollInterval = setInterval(()=>{

@@ -24,8 +24,19 @@ let separatorCount = 0;
 var lastRunTimestamp = getCurrentTimestamp();
 const startTime = Date.now();
 var showMoreFeedUpdates='Show more feed updates';
+
 // var DurationScrappingTime = localStorage.getItem('DurationScrappingTime') ? parseInt(localStorage.getItem('DurationScrappingTime')) :
 // localStorage.setItem('DurationScrappingTime',parseInt(1000));
+
+var DurationScrappingTime;
+if(!localStorage.getItem('DurationScrappingTime') ){
+    localStorage.setItem('DurationScrappingTime',parseInt(5000));
+}
+
+
+
+
+
 
 //██████████████████████████████████████████████████████████████████████████████████████████████████████████████████
 var scrollIncrement = 1000;

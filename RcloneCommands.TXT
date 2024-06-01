@@ -1,0 +1,286 @@
+PS C:\Users\Dell> rclone config
+//████████████████████████████
+
+
+Current remotes:
+
+Name                 Type
+====                 ====
+AceAlBastoni         drive
+AceAlBastoni2        drive
+AceAlBastoni3        drive
+
+e) Edit existing remote
+n) New remote
+d) Delete remote
+r) Rename remote
+c) Copy remote
+s) Set configuration password
+q) Quit config
+
+e/n/d/r/c/s/q> d
+//████████████████████████████
+
+Select remote.
+Choose a number from below, or type in an existing value.
+ 1 > AceAlBastoni
+ 2 > AceAlBastoni2
+ 3 > AceAlBastoni3
+
+remote> 3
+//████████████████████████████
+
+
+Current remotes:
+
+Name                 Type
+====                 ====
+AceAlBastoni         drive
+AceAlBastoni2        drive
+
+e) Edit existing remote
+n) New remote
+d) Delete remote
+r) Rename remote
+c) Copy remote
+s) Set configuration password
+q) Quit config
+
+e/n/d/r/c/s/q> n
+//████████████████████████████
+
+Enter name for new remote.
+
+name> drive
+//████████████████████████████
+
+Option Storage.
+Type of storage to configure.
+Choose a number from below, or type in your own value.
+ 1 / 1Fichier
+   \ (fichier)
+ 2 / Akamai NetStorage
+   \ (netstorage)
+ 3 / Alias for an existing remote
+   \ (alias)
+ 4 / Amazon S3 Compliant Storage Providers including AWS, Alibaba, ArvanCloud, Ceph, ChinaMobile, Cloudflare, DigitalOcean, Dreamhost, GCS, HuaweiOBS, IBMCOS, IDrive, IONOS, LyveCloud, Leviia, Liara, Linode, Minio, Netease, Petabox, RackCorp, Rclone, Scaleway, SeaweedFS, StackPath, Storj, Synology, TencentCOS, Wasabi, Qiniu and others
+   \ (s3)
+ 5 / Backblaze B2
+   \ (b2)
+ 6 / Better checksums for other remotes
+   \ (hasher)
+ 7 / Box
+   \ (box)
+ 8 / Cache a remote
+   \ (cache)
+ 9 / Citrix Sharefile
+   \ (sharefile)
+10 / Combine several remotes into one
+   \ (combine)
+11 / Compress a remote
+   \ (compress)
+12 / Dropbox
+   \ (dropbox)
+13 / Encrypt/Decrypt a remote
+   \ (crypt)
+14 / Enterprise File Fabric
+   \ (filefabric)
+15 / FTP
+   \ (ftp)
+16 / Google Cloud Storage (this is not Google Drive)
+   \ (google cloud storage)
+17 / Google Drive
+   \ (drive)
+18 / Google Photos
+   \ (google photos)
+19 / HTTP
+   \ (http)
+20 / Hadoop distributed file system
+   \ (hdfs)
+21 / HiDrive
+   \ (hidrive)
+22 / ImageKit.io
+   \ (imagekit)
+23 / In memory object storage system.
+   \ (memory)
+24 / Internet Archive
+   \ (internetarchive)
+25 / Jottacloud
+   \ (jottacloud)
+26 / Koofr, Digi Storage and other Koofr-compatible storage providers
+   \ (koofr)
+27 / Linkbox
+   \ (linkbox)
+28 / Local Disk
+   \ (local)
+29 / Mail.ru Cloud
+   \ (mailru)
+30 / Mega
+   \ (mega)
+31 / Microsoft Azure Blob Storage
+   \ (azureblob)
+32 / Microsoft Azure Files
+   \ (azurefiles)
+33 / Microsoft OneDrive
+   \ (onedrive)
+34 / OpenDrive
+   \ (opendrive)
+35 / OpenStack Swift (Rackspace Cloud Files, Blomp Cloud Storage, Memset Memstore, OVH)
+   \ (swift)
+36 / Oracle Cloud Infrastructure Object Storage
+   \ (oracleobjectstorage)
+37 / Pcloud
+   \ (pcloud)
+38 / PikPak
+   \ (pikpak)
+39 / Proton Drive
+   \ (protondrive)
+40 / Put.io
+   \ (putio)
+41 / QingCloud Object Storage
+   \ (qingstor)
+42 / Quatrix by Maytech
+   \ (quatrix)
+43 / SMB / CIFS
+   \ (smb)
+44 / SSH/SFTP
+   \ (sftp)
+45 / Sia Decentralized Cloud
+   \ (sia)
+46 / Storj Decentralized Cloud Storage
+   \ (storj)
+47 / Sugarsync
+   \ (sugarsync)
+48 / Transparently chunk/split large files
+   \ (chunker)
+49 / Union merges the contents of several upstream fs
+   \ (union)
+50 / Uptobox
+   \ (uptobox)
+51 / WebDAV
+   \ (webdav)
+52 / Yandex Disk
+   \ (yandex)
+53 / Zoho
+   \ (zoho)
+54 / premiumize.me
+   \ (premiumizeme)
+55 / seafile
+   \ (seafile)
+
+Storage> drive
+//████████████████████████████
+
+
+Option client_id.
+Google Application Client Id
+Setting your own is recommended.
+See https://rclone.org/drive/#making-your-own-client-id for how to create your own.
+If you leave this blank, it will use an internal key which is low performance.
+Enter a value. Press Enter to leave empty.
+
+client_id>
+//████████████████████████████
+
+Option client_secret.
+OAuth Client Secret.
+Leave blank normally.
+Enter a value. Press Enter to leave empty.
+
+client_secret>
+//████████████████████████████
+
+Option scope.
+Comma separated list of scopes that rclone should use when requesting access from drive.
+Choose a number from below, or type in your own value.
+Press Enter to leave empty.
+ 1 / Full access all files, excluding Application Data Folder.
+   \ (drive)
+ 2 / Read-only access to file metadata and file contents.
+   \ (drive.readonly)
+   / Access to files created by rclone only.
+ 3 | These are visible in the drive website.
+   | File authorization is revoked when the user deauthorizes the app.
+   \ (drive.file)
+   / Allows read and write access to the Application Data folder.
+ 4 | This is not visible in the drive website.
+   \ (drive.appfolder)
+   / Allows read-only access to file metadata but
+ 5 | does not allow any access to read or download file content.
+   \ (drive.metadata.readonly)
+scope> 1
+//████████████████████████████
+
+
+Option service_account_file.
+Service Account Credentials JSON file path.
+Leave blank normally.
+Needed only if you want use SA instead of interactive login.
+Leading `~` will be expanded in the file name as will environment variables such as `${RCLONE_CONFIG_DIR}`.
+Enter a value. Press Enter to leave empty.
+service_account_file>
+
+Edit advanced config?
+y) Yes
+n) No (default)
+
+y/n> n
+//████████████████████████████
+
+Use web browser to automatically authenticate rclone with remote?
+ * Say Y if the machine running rclone has a web browser you can use
+ * Say N if running rclone on a (remote) machine without web browser access
+If not sure try Y. If Y failed, try N.
+
+y) Yes (default)
+n) No
+
+y/n> y
+//████████████████████████████
+
+2024/05/31 20:41:09 NOTICE: If your browser doesn't open automatically go to the following link: http://127.0.0.1:53682/auth?state=Fo-Vhl28oSkmFHjTvnYxpQ
+2024/05/31 20:41:09 NOTICE: Log in and authorize rclone for access
+2024/05/31 20:41:09 NOTICE: Waiting for code...
+2024/05/31 20:42:52 NOTICE: Got code
+Configure this as a Shared Drive (Team Drive)?
+
+y) Yes
+n) No (default)
+
+y/n> n
+//████████████████████████████
+
+Configuration complete.
+Options:
+- type: drive
+- scope: drive
+- token: {"access_token":"ya29.a0AXooCguQDmpczx7jJjLvu6q5s214OidOBahXbydJ29yAlb3cg6beOiKnwhjQ6gFf1vjf99RmfzHq_VPdpBIlXVPb3jtNMib4zsOAd0bpmKRUfhF22rDo0yJFqXzrESpaGbgxdWTDHprWmMNu55qPiBOEBugNoQn_PbVbaCgYKATsSARMSFQHGX2MiuzHOWwwbrQN53eZVMs-qPw0171","token_type":"Bearer","refresh_token":"1//03-tHwwrkE4KuCgYIARAAGAMSNwF-L9IrbFBv9dSlpEF-uC1VJwDITBUDqzmpn08LbyqVvzE_36Fxt1P5mcH4oUX2nZ1SzQfeEyg","expiry":"2024-05-31T21:42:51.6281276+03:00"}
+- team_drive:
+Keep this "drive" remote?
+y) Yes this is OK (default)
+e) Edit this remote
+d) Delete this remote
+
+y/e/d> y
+//████████████████████████████
+
+Current remotes:
+
+Name                 Type
+====                 ====
+AceAlBastoni         drive
+AceAlBastoni2        drive
+drive                drive
+
+e) Edit existing remote
+n) New remote
+d) Delete remote
+r) Rename remote
+c) Copy remote
+s) Set configuration password
+q) Quit config
+
+e/n/d/r/c/s/q> rclone ls drive:
+This value must be a single character, one of the following: e, n, d, r, c, s, q.
+e/n/d/r/c/s/q> clear
+This value must be a single character, o

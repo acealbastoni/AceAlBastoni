@@ -6,9 +6,9 @@ fetch('https://script.google.com/macros/s/AKfycbzH1jCTWWh_zO7dKbFjXd0-It4WV-moWD
   .then(response => response.json())
   .then(data => {
     // Alert the URL fetched from the API
-    //alert("New is:" + data.url);
-    //alert(JSON.stringify(data.url))
-    localStorage.setItem('NEXT_URL', JSON.stringify(data.url)?JSON.stringify(data.url):'https://www.linkedin.com/feed/');
+    //localStorage.setItem('NEXT_URL', JSON.stringify(data.url)?JSON.stringify(data.url):'https://www.linkedin.com/feed/');
+    localStorage.setItem('NEXT_URL', JSON.stringify(data.url));
+    //alert( JSON.stringify(data.url))
   })
   .catch(error => {
     alert(error); // Alerting the error if any

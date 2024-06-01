@@ -1,3 +1,4 @@
+start 2.AceAlBastoni.Sync_to_gdrive.bat
 @echo off
 REM Get the directory where this script is located
 REM set "ScriptDir=%~dp0"

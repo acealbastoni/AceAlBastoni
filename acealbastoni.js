@@ -34,6 +34,10 @@ if(!localStorage.getItem('DurationScrappingTime') ){
 }
 
 
+// if(!JSON.parse(localStorage.getItem('NEXT_URL')).url){
+// // if(!JSON.parse(localStorage.getItem('NEXT_URL')).url){
+//     localStorage.setItem('NEXT_URL','https://www.linkedin.com/feed/');
+// }
 
 
 

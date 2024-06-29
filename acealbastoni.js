@@ -102,7 +102,7 @@ var handlStartTim=Date.now();
 
 function promptAndSetToLocalStorage() {
     // Prompt the user for input
-    const inputValue = window.prompt('Enter a value to set to local storage:');
+    const inputValue = window.prompt('Enter Time to scrap per URL (In seconds)');
 
     // Check if inputValue is not null (user clicked cancel) or an empty string
     if (inputValue !== null && inputValue.trim() !== '') {
@@ -141,11 +141,13 @@ function handleKeyDown(event) {
     if (event.code === 'ArrowLeft' || event.key === 'ArrowLeft' || event.key === 'ي') {
         scrollIncrement -= 10; // Decrease the scroll increment by 10
     }
+
     if (event.code === 'Numpad0' || event.code === 'Digit0') {
         stopInterval();
         handleScroll(); // Call handleScroll once immediately
         startInterval(); // Start a new interval
     }
+
     // Check if the key pressed is the up arrow key
     if (event.code === 'ArrowUp' || event.key === 'ArrowUp') {
         localStorage.setItem('DurationScrappingTime',parseInt(localStorage.getItem('DurationScrappingTime')) + (1000))
@@ -230,6 +232,7 @@ function handleKeyDown(event) {
 function continuousScroll() {
     window.scrollBy(0, scrollIncrement);
     const likeButtons = document.querySelectorAll('button[aria-label^="React Like"]');
+    //likeButtons.forEach((button) =>{button.click();sleep(2000);});
     // Check the condition for downFile()
     downFile();
     removeReactions();
@@ -300,6 +303,7 @@ function downFile(keyF_Pressed) {
 function removeReactions() {
     const buttons = [...document.querySelectorAll('button[aria-label]')];
     buttons.forEach(button => {
+        //sleep(1500);
         if (button.getAttribute('aria-label').indexOf('Unreact') !== -1) {
             button.click();
         }

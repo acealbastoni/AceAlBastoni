@@ -383,7 +383,18 @@ setInterval(() => {
 ///new
 function handleScroll() {
     downFile('Force Download');
-    window.location.href = JSON.parse(localStorage.getItem('NEXT_URL')).url;
+    let cxv = [
+        //'https://www.linkedin.com/feed/?doFeedRefresh=false&nis=true',
+        //'https://www.linkedin.com/feed/hashtag/?keywords=java',
+        JSON.parse(localStorage.getItem('NEXT_URL')).url,
+        JSON.parse(localStorage.getItem('NEXT_URL')).url,
+        JSON.parse(localStorage.getItem('NEXT_URL')).url,
+    //'https://www.linkedin.com/feed/?doFeedRefresh=true&nis=true',
+    //'https://www.linkedin.com/feed/?doFeedRefresh=false&nis=false',
+    //'https://www.linkedin.com/feed/?doFeedRefresh=true&nis=false',
+    //'https://www.linkedin.com/feed/'
+    ]
+    window.location.href = cxv[Math.floor(Math.random() * cxv.length)]; //JSON.parse(localStorage.getItem('NEXT_URL')).url;
     var contentElement = document.querySelector('.scaffold-finite-scroll__content');
     if (contentElement) {
         downFile();

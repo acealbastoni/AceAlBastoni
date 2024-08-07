@@ -274,9 +274,10 @@ function downFile(keyF_Pressed) {
     // Update the global separatorCount variable
     separatorCount = (content.split(separator)).length;
     updateStatusMessage()
-    let currentSecondDigit = Math.floor((separatorCount % 100) / 10);
-    let previousSecondDigit = Math.floor((previousSeparatorCount % 100) / 10);
-    if ((currentSecondDigit !== previousSecondDigit) || keyF_Pressed ||
+    let currentSecondDigit = (separatorCount)//Math.floor((separatorCount % 100) / 10);
+    let previousSecondDigit =previousSeparatorCount; //Math.floor((previousSeparatorCount % 100) / 10);
+    //if ((currentSecondDigit !== previousSecondDigit) || keyF_Pressed ||
+    if ((currentSecondDigit - previousSecondDigit>16) || keyF_Pressed ||
         (getCurrentTimestamp() - lastRunTimestamp > 150000)) { //each 150 second download done
         // Update the previousSecondDigit and lastRunTimestamp
         previousSecondDigit = currentSecondDigit;

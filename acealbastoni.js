@@ -24,7 +24,6 @@ let separatorCount = 0;
 var lastRunTimestamp = getCurrentTimestamp();
 const startTime = Date.now();
 var showMoreFeedUpdates='Show more feed updates';
-
 // var DurationScrappingTime = localStorage.getItem('DurationScrappingTime') ? parseInt(localStorage.getItem('DurationScrappingTime')) :
 // localStorage.setItem('DurationScrappingTime',parseInt(1000));
 
@@ -43,7 +42,7 @@ if(!localStorage.getItem('DurationScrappingTime') ){
 
 
 //██████████████████████████████████████████████████████████████████████████████████████████████████████████████████
-var scrollIncrement = 1000;
+var scrollIncrement = 450;
 var dimScreen = false;
 
 // Initialize a boolean variable to track the 's' key state
@@ -245,6 +244,67 @@ downFile('Force Download');
 // Start continuous scrolling
 continuousScroll();
 //https://www.linkedin.com/feed/?highlightedUpdateUrn=urn%3Ali%3Aactivity%3A7149112285796511745&highlightedUpdateType=VIRAL_ACTION&origin=SHARED_BY_YOUR_NETWORK&showCommentBox=true
+
+// Your existing script continues here
+//toggleDimScreen();
+document.addEventListener('keydown', handleKeyDown);
+downFile('Force Download');
+
+continuousScroll();
+
+//██████████████████████████████████████████████████████████████████████████████████████████████████████████████████
+
+// Add this at the beginning of your script or after your initializations
+
+// Function to block heavy objects (images, audios, videos, iframes, etc.)
+function blockHeavyContent() {
+    // Block rendering of heavy content using CSS
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    style.innerHTML = `
+        img, video, iframe, audio, embed, object, canvas {
+            display: none !important;
+            visibility: hidden !important;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Remove existing heavy objects from the DOM
+    document.querySelectorAll('img, video, iframe, audio, embed, object, canvas').forEach(el => el.remove());
+}
+
+// Function to intercept and block heavy objects added dynamically to the DOM
+function observeAndBlockHeavyContent() {
+    const observer = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+            if (mutation.addedNodes) {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        const tagName = node.tagName.toUpperCase();
+                        // Check if the new node is a heavy object and remove it
+                        if (['IMG', 'VIDEO', 'IFRAME', 'AUDIO', 'EMBED', 'OBJECT', 'CANVAS'].includes(tagName)) {
+                            node.remove();
+                        } else if (node.querySelectorAll) {
+                            // Check and remove any heavy objects inside the added node
+                            node.querySelectorAll('img, video, iframe, audio, embed, object, canvas').forEach(el => el.remove());
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    // Start observing the document body
+    observer.observe(document.body, { childList: true, subtree: true });
+}
+
+// Call the functions to block heavy content
+blockHeavyContent();
+observeAndBlockHeavyContent();
+//██████████████████████████████████████████████████████████████████████████████████████████████████████████████████
+
+
+
 //██████████████████████████████████████████████████████████████████████████████████████████████████████████████████
 // // Declare separatorCount as a global variable
 function downFile(keyF_Pressed) {
@@ -277,8 +337,11 @@ function downFile(keyF_Pressed) {
     let currentSecondDigit = (separatorCount)//Math.floor((separatorCount % 100) / 10);
     let previousSecondDigit =previousSeparatorCount; //Math.floor((previousSeparatorCount % 100) / 10);
     //if ((currentSecondDigit !== previousSecondDigit) || keyF_Pressed ||
-    if ((currentSecondDigit - previousSecondDigit>16) || keyF_Pressed ||
-        (getCurrentTimestamp() - lastRunTimestamp > 150000)) { //each 150 second download done
+    if (
+        (currentSecondDigit - previousSecondDigit>10) 
+        || keyF_Pressed 
+        ||(getCurrentTimestamp() - lastRunTimestamp > 150000)
+        ) { //each 150 second download done
         // Update the previousSecondDigit and lastRunTimestamp
         previousSecondDigit = currentSecondDigit;
         lastRunTimestamp = getCurrentTimestamp();
@@ -449,5 +512,3 @@ if (showMoreButton) {
 }
 })()
 },7000)
-
-

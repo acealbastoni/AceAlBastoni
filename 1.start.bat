@@ -1,10 +1,16 @@
-start AceAlBastoni.Sync_to_gdrive.Prod.bat
+REM java -jar "C:\Users\Dell\Desktop\AceAlBastoni\simple\AceAlBastoni\AceAlBastoni.jar"
+REM start AceAlBastoni.Sync_to_gdrive.Prod.bat
+start run_job_importer.bat
 @echo off
 REM Get the directory where this script is located
 REM set "ScriptDir=%~dp0"
 
 :loop
 @echo start AceAlbastoni.
+
+
+
+
 REM Close Google Chrome
 taskkill /F /IM chrome.exe /T >nul 2>&1
 
@@ -15,9 +21,10 @@ REM Open LinkedIn
 start https://www.linkedin.com/feed/
 
 REM Wait for 1 equal 1seconed-->500 = 15 minutes
-timeout /t 900 /nobreak >nul
+timeout /t 600 /nobreak >nul
 
 REM taskkill /f /im chrome.exe
+
 
 REM Restart the loop
 goto loop

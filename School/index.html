@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/script.js" defer></script>
+</head>
+<body>
+    <!-- Header Section -->
+    <section class="header-section">
+        <header class="header">
+            <div class="logo-area">
+                <a href="https://www.linkedin.com/in/mohamed-abd-elhameed-108342a4/" target="_blank" rel="noopener noreferrer">
+                    <img src="images/logo.gif" alt="Logo" class="header-logo">
+                </a>
+            </div>
+            <nav class="nav">
+                <a href="#">Home</a>
+                <a href="#">Messages</a>
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle">
+                        <i class="fa fa-bell"></i> <!-- Bell icon -->
+                        Notifications
+                        <span class="notification-badge">5</span> <!-- Notification count -->
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>Notification 1</li>
+                        <li>Notification 2</li>
+                        <li>Notification 3</li>
+                    </ul>
+                </div>
+                <a href="#">Account</a>
+                <input type="text" placeholder="Search..." class="search-bar">
+                <button>Search</button>
+            </nav>
+        </header>
+    </section>
+
+    <!-- Main Wrapper Section -->
+    <section class="sidebar-section">
+        <aside class="sidebar">
+            <ul>
+                <br>
+                <br>
+                <br>
+                <li class="expandable">
+                    <a href="#" class="expand-toggle">Management</a>
+                    <ul class="sub-menu">
+                        <li><a href="#" data-page="pages/dashboard.html">Dashboard</a></li>
+                        <li><a href="#" data-page="pages/admissions.html">Admissions</a></li>
+                        <li><a href="#" data-page="pages/students.html">Students</a></li>
+                        <li><a href="#" data-page="pages/teachers.html">Teachers</a></li>
+                        <li><a href="#" data-page="pages/classes.html">Classes</a></li>
+                        <li><a href="#" data-page="pages/timetable.html">Timetable</a></li>
+                    </ul>
+                </li>
+    
+                <li class="expandable">
+                    <a href="#" class="expand-toggle">Academic</a>
+                    <ul class="sub-menu">
+                        <li><a href="#" data-page="pages/exams.html">Exams</a></li>
+                        <li><a href="#" data-page="pages/attendance.html">Attendance</a></li>
+                        <li><a href="#" data-page="pages/library.html">Library</a></li>
+                        <li><a href="#" data-page="pages/reports.html">Reports</a></li>
+                    </ul>
+                </li>
+    
+                <li class="expandable">
+                    <a href="#" class="expand-toggle">Finance</a>
+                    <ul class="sub-menu">
+                        <li><a href="#" data-page="pages/fees.html">Fees</a></li>
+                        <li><a href="#" data-page="pages/transport.html">Transport</a></li>
+                    </ul>
+                </li>
+    
+                <li class="expandable">
+                    <a href="#" class="expand-toggle">Settings</a>
+                    <ul class="sub-menu">
+                        <li><a href="#" data-page="pages/setting1.html">System Settings</a></li>
+                        <li><a href="#" data-page="pages/setting2.html">User Roles</a></li>
+                        <li><a href="#" data-page="pages/setting3.html">Permissions</a></li>
+                        <li><a href="#" data-page="pages/setting4.html">Notifications</a></li>
+                    </ul>
+                </li>
+    
+                <li class="expandable">
+                    <a href="#" class="expand-toggle">Communication</a>
+                    <ul class="sub-menu">
+                        <li><a href="#" data-page="pages/messages.html">Messages</a></li>
+                        <li><a href="#" data-page="pages/notifications.html">Notifications</a></li>
+                        <li><a href="#" data-page="pages/events.html">Events</a></li>
+                    </ul>
+                </li>
+    
+                <li class="expandable">
+                    <a href="#" class="expand-toggle">KPIs</a>
+                    <ul class="sub-menu">
+                        <li><a href="#" data-page="pages/kpi1.html">Attendance Rate</a></li>
+                        <li><a href="#" data-page="pages/kpi2.html">Academic Performance</a></li>
+                        <li><a href="#" data-page="pages/kpi3.html">Staff Efficiency</a></li>
+                        <li><a href="#" data-page="pages/kpi4.html">Fee Collection</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </aside>
+    </section>
+    
+
+        <!-- Dynamic Content Section -->
+        <section class="content-section">
+            <main class="content" id="dynamic-content">
+                <h2>Welcome to the Dynamic Dashboard</h2>
+                <p>Select an item from the menu to load content here.</p>
+            </main>
+        </section>
+    </section>
+</body>
+</html>

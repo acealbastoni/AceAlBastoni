@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/script.js" defer></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Your content here -->
+
+
+        <div class="dashboard-container">
+            <!-- Dashboard Header -->
+            <header class="dashboard-header">
+                <h1>School Management System </h1>
+                <p>Welcome to the dashboard overview. Quickly access important metrics and insights.</p>
+                
+            </header>
+        
+            <!-- Statistics Section -->
+            <section class="stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa fa-envelope"></i>
+                    </div>
+                 <!-- Trigger -->
+        <div class="stat-content" id="newMessagesTrigger">
+            <span class="number">5</span>
+            <p>New Messages</p>
+        </div>
+                            
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa fa-exchange-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="number">10</span>
+                        <p>Pending Transfers</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa fa-bell"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="number">3</span>
+                        <p>Notifications</p>
+                    </div>
+                </div>
+            </section>
+        
+            <!-- Nodes Section -->
+            <section class="nodes-section">
+                <h2>Nodes</h2>
+                <div class="master-toggle">
+                    <span>Toggle All</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="master-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <ul id="node-list">
+                    <!-- Dynamically populated email nodes will appear here -->
+                </ul>
+            </section>
+            
+        
+        
+        
+        
+            
+        
+            <!-- Actions Section -->
+            <section class="actions">
+                <button class="btn primary-btn">View Full Report</button>
+                <button class="btn secondary-btn">Manage Transfers</button>
+            </section>
+        </div>
+
+
+
+
+    </div>
+</body>
+</html>

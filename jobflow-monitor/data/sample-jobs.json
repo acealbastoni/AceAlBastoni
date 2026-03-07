@@ -1,0 +1,36 @@
+[
+  {
+    "id": 1,
+    "title": "Software Engineer",
+    "domain": "company.com",
+    "hashtags": [
+      "#hiring",
+      "#ksa"
+    ],
+    "emails": [
+      "jobs@company.com"
+    ],
+    "postedAt": "2025-09-25T09:15:31.000Z",
+    "description": "Software Engineer at company.com #hiring #ksa",
+    "location": {
+      "lat": 24.7136,
+      "lng": 46.6753
+    }
+  },
+  {
+    "id": 2,
+    "title": "Data Analyst",
+    "domain": "example.io",
+    "hashtags": [
+      "#remote",
+      "#python"
+    ],
+    "emails": [],
+    "postedAt": "2025-09-28T11:45:00.000Z",
+    "description": "Data Analyst #remote #python",
+    "location": {
+      "lat": 21.4858,
+      "lng": 39.1925
+    }
+  }
+]

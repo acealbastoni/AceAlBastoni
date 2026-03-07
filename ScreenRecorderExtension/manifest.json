@@ -1,0 +1,15 @@
+{
+    "manifest_version": 3,
+    "name": "Screen Recorder",
+    "version": "1.0",
+    "description": "Record your screen directly from Chrome",
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": "icon.png"
+    },
+    "permissions": ["storage"],
+    "background": {
+      "service_worker": "recorder.js"
+    }
+  }
+  

@@ -1,0 +1,259 @@
+import model.Job;
+import utils.DBConnection;
+
+import java.io.File;
+import java.nio.file.*;
+import java.security.MessageDigest;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
+
+public class JobImporterApp {
+
+    private static final String FOLDER_PATH = 
+    		
+    "C:\\rclone\\rclone-v1.66.0-windows-amd64\\New folder\\";
+    //"E:\\Data\\New folder\\New folder\\6";
+    		//"E:\\Data\\➜ InputFiles";
+    
+    private static final String SEPARATOR = "████████████████████████████████████████████████████████████████████████████████████████████████████";
+
+    public static void main(String[] args) {
+
+        int[] totals = new int[3]; // [inserted, duplicates, errors]
+
+        try (Connection conn = DBConnection.getConnection()) {
+            System.out.println("📁 Scanning folder: " + FOLDER_PATH);
+
+            File folder = new File(FOLDER_PATH);
+            File[] allFiles = folder.listFiles();
+            renameFiles(allFiles);
+            int totalFilesInFolder = (allFiles != null) ? allFiles.length : 0;
+
+            File[] allTxtFiles = folder.listFiles(file -> file.getName().endsWith(".txt"));
+
+//            if (allTxtFiles != null) {
+//                Arrays.sort(allTxtFiles, Comparator.comparingLong(File::lastModified).reversed());
+//            }
+
+            if (allTxtFiles == null || allTxtFiles.length == 0) {
+                System.out.println("⚠️ No .txt files found.");
+                return;
+            }
+
+            int totalTxtFiles = allTxtFiles.length;
+            int processedFiles = 0;
+
+            long startTime = System.currentTimeMillis();
+
+            for (File txtFile : allTxtFiles) {
+                long fileStartTime = System.currentTimeMillis();
+
+                int[] results = processFile(txtFile, conn);
+                totals[0] += results[0]; // inserted
+                totals[1] += results[1]; // duplicates
+                totals[2] += results[2]; // errors
+
+                processedFiles++;
+                int percent = (processedFiles * 100) / totalTxtFiles;
+
+                // ⏱ Time tracking
+                long now = System.currentTimeMillis();
+                long elapsed = now - startTime;
+                long avgPerFile = elapsed / processedFiles;
+                long remaining = avgPerFile * (totalTxtFiles - processedFiles);
+
+                String elapsedFormatted = formatMillis(elapsed);
+                String remainingFormatted = formatMillis(remaining);
+
+                System.out.printf(
+                    "📊 %d/%d .txt files (%d%%) — out of %d total files | Elapsed: %s | ETA: %s%n",
+                    processedFiles, totalTxtFiles, percent, totalFilesInFolder, elapsedFormatted, remainingFormatted
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("\n✅ Import Summary:");
+        System.out.println("   Inserted: " + totals[0]);
+        //System.out.println("   Duplicates Skipped: " + totals[1]);
+        System.out.println("   Errors: " + totals[2]);
+    }
+
+
+    private static int[] processFile(File file, Connection conn) {
+        int inserted = 0;
+        int duplicates = 0;
+        int errors = 0;
+
+        if (ProcessedFilesTracker.isProcessed(file.getName())) {
+            System.out.println("⏩ Skipping already processed file: " + file.getName());
+            return new int[]{0, 0, 0};
+        }
+
+        try {
+            String[] parts = file.getName().split("█");
+            String profileId = parts[2];
+            String scrappedDate = parts[3];
+            String source = parts[4];
+            String scrappedVersion = parts[5].replace(".txt", "");
+
+            String content = new String(Files.readAllBytes(file.toPath()), "UTF-8");
+            String[] jobs = content.split(SEPARATOR);
+            System.out.println("📄 File: " + file.getName() + " | Jobs found: " + jobs.length);
+
+            String sql = "INSERT INTO jobs (PlainText_Job_Description, Hashed_Job_Describtion, Encrypted_Job_Description, " +
+                    "Attached_Emails, Profile_ID, Source, Scrapped_Date, Scrapped_Version, Time_Input_The_System, SQL_generated_HMD5) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            int batchSize = 1000;
+            int batchCount = 0;
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                for (String jobText : jobs) {
+                    String plainText = jobText.trim();
+                    if (plainText.isEmpty()) continue;
+
+                    try {
+                        String hash = md5(plainText);
+                        Job job = new Job();
+                        job.setPlainText(plainText);
+                        job.setHashedDescription(hash);
+                        job.setSqlGeneratedMD5(hash);
+                        job.setEncryptedDescription(null);
+                        job.setAttachedEmails(null);
+                        job.setProfileId(profileId);
+                        job.setScrappedDate(scrappedDate);
+                        job.setSource(source);
+                        job.setScrappedVersion(scrappedVersion);
+                        job.setTimeInputTheSystem(currentTimestamp());
+
+                        stmt.setString(1, job.getPlainText());
+                        stmt.setString(2, job.getHashedDescription());
+                        stmt.setString(3, job.getEncryptedDescription());
+                        stmt.setString(4, job.getAttachedEmails());
+                        stmt.setString(5, job.getProfileId());
+                        stmt.setString(6, job.getSource());
+                        stmt.setString(7, job.getScrappedDate());
+                        stmt.setString(8, job.getScrappedVersion());
+                        stmt.setString(9, job.getTimeInputTheSystem());
+                        stmt.setString(10, job.getSqlGeneratedMD5());
+
+                        stmt.addBatch();
+                        batchCount++;
+                        inserted++;
+
+                        if (batchCount % batchSize == 0) {
+                            stmt.executeBatch();
+                            batchCount = 0;
+                        }
+                    } catch (SQLIntegrityConstraintViolationException dup) {
+                        duplicates++;
+                    } catch (SQLException e) {
+                        errors++;
+                        //System.err.println("❌ SQL error: " + e.getMessage());
+                    }
+                }
+                if (batchCount > 0) stmt.executeBatch(); // final flush
+            }
+
+            ProcessedFilesTracker.markAsProcessed(file.getName());
+
+        } catch (Exception e) {
+            errors++;
+            //System.err.println("❌ Failed to process file: " + file.getName());
+            //e.printStackTrace();
+        }
+
+        return new int[]{inserted, duplicates, errors};
+    }
+
+    private static String currentTimestamp() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+    }
+
+    private static String md5(String input) throws Exception {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] hash = md.digest(input.getBytes("UTF-8"));
+        StringBuilder hex = new StringBuilder();
+        for (byte b : hash) hex.append(String.format("%02x", b));
+        return hex.toString();
+    }
+
+    private static void insertJob(Job job, Connection conn) throws SQLException {
+        String sql = "INSERT INTO jobs (PlainText_Job_Description, Hashed_Job_Describtion, Encrypted_Job_Description, " +
+                "Attached_Emails, Profile_ID, Source, Scrapped_Date, Scrapped_Version, Time_Input_The_System, SQL_generated_HMD5) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, job.getPlainText());
+            stmt.setString(2, job.getHashedDescription());
+            stmt.setString(3, job.getEncryptedDescription());
+            stmt.setString(4, job.getAttachedEmails());
+            stmt.setString(5, job.getProfileId());
+            stmt.setString(6, job.getSource());
+            stmt.setString(7, job.getScrappedDate());
+            stmt.setString(8, job.getScrappedVersion());
+            stmt.setString(9, job.getTimeInputTheSystem());
+            stmt.setString(10, job.getSqlGeneratedMD5());
+            stmt.executeUpdate();
+        }
+    }
+    
+    private static String formatMillis(long millis) {
+        long seconds = millis / 1000;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        return String.format("%02dh:%02dm:%02ds", hours, minutes % 60, seconds % 60);
+    }
+    
+    private static void renameFiles(File[] allFiles) {
+        if (allFiles == null) {
+            System.out.println("No files found.");
+            return;
+        }
+
+        for (File file : allFiles) {
+            if (!file.isFile()) continue;
+
+            String fileName = file.getName();
+
+            if (!fileName.contains("█")) continue;
+
+            String[] segments = fileName.split("█", -1);
+            if (segments.length < 6) continue; // ensuring it has enough segments including the last empty segment if ends with █
+
+            String segmentToCheck = segments[4];
+
+            int originIndex = segmentToCheck.indexOf("&origin");
+            if (originIndex != -1) {
+                // Remove from &origin to the end of segment[4]
+                String cleanedSegment = segmentToCheck.substring(0, originIndex);
+                segments[4] = cleanedSegment;
+
+                // Rebuild the new filename
+                StringBuilder newFileNameBuilder = new StringBuilder();
+                for (int i = 0; i < segments.length; i++) {
+                    newFileNameBuilder.append(segments[i]);
+                    if (i != segments.length - 1) {
+                        newFileNameBuilder.append("█");
+                    }
+                }
+                String newFileName = newFileNameBuilder.toString();
+
+                File newFile = new File(file.getParent(), newFileName);
+
+                if (file.renameTo(newFile)) {
+                    System.out.println("Renamed: " + fileName + " -> " + newFileName);
+                } else {
+                    System.out.println("Failed to rename: " + fileName);
+                }
+            }
+        }
+    }
+
+}

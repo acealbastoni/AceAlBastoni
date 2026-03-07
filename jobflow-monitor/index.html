@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JobFlow Monitor — لوحة متابعة الوظائف</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+
+  <!-- Chart.js للرسوم -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Leaflet + MarkerCluster للخرائط الدقيقة -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <h1>JobFlow Monitor</h1>
+    <div class="top-actions">
+      <button id="btnReload" class="btn">إعادة تحميل</button>
+      <button id="btnExportCSV" class="btn">تصدير CSV</button>
+      <button id="btnExportJSON" class="btn alt">تنزيل JSON</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- فلاتر البحث -->
+    <section class="card">
+      <div class="filters">
+        <div>
+          <label>الفترة</label>
+          <div class="row">
+            <input type="date" id="fromDate" />
+            <input type="date" id="toDate" />
+          </div>
+        </div>
+        <div>
+          <label>الدومين</label>
+          <input id="domainFilter" placeholder="مثال: company.com" />
+        </div>
+        <div>
+          <label>هاشتاج</label>
+          <input id="hashtagFilter" placeholder="#hiring #remote" />
+        </div>
+        <div>
+          <label>بحث نصي</label>
+          <input id="q" placeholder="عنوان/وصف/إيميل…" />
+        </div>
+        <div class="vcenter">
+          <button id="btnApply" class="btn primary">تطبيق الفلاتر</button>
+          <button id="btnReset" class="btn">إعادة الضبط</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- KPIs -->
+    <section class="card">
+      <div class="kpis">
+        <div class="pill">
+          إجمالي اليوم<b id="kpiToday">—</b>
+          <span>عدد الوظائف اليوم</span>
+        </div>
+        <div class="pill">
+          آخر 7 أيام<b id="kpi7">—</b>
+          <span>مجموع الوظائف</span>
+        </div>
+        <div class="pill">
+          آخر 30 يوم<b id="kpi30">—</b>
+          <span>مجموع الوظائف</span>
+        </div>
+        <div class="pill">
+          الدومينات الفريدة<b id="kpiDomains">—</b>
+          <span>Distinct domains</span>
+        </div>
+        <div class="pill">
+          المتوسط/اليوم<b id="kpiAvg">—</b>
+          <span>لمدى الفلتر الحالي</span>
+        </div>
+        <div class="pill">
+          الوظائف مع إيميل<b id="kpiWithEmail">—</b>
+          <span>استخراج بريد بنجاح</span>
+        </div>
+        <div class="pill">
+          الوظائف مع هاشتاج<b id="kpiWithTags">—</b>
+          <span>يحتوي على #</span>
+        </div>
+        <div class="pill">
+          آخر سحب<b id="kpiLastIngest">—</b>
+          <span>تاريخ/وقت</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- الرسوم + الخريطة -->
+    <section class="card">
+      <div class="tabs">
+        <button class="tab active" data-tab="trend">اتجاه يومي</button>
+        <button class="tab" data-tab="domains">توزيع الدومينات</button>
+        <button class="tab" data-tab="hashtags">أفضل الهاشتاجات</button>
+        <button class="tab" data-tab="emails">مصداقية الإيميلات</button>
+        <button class="tab" data-tab="map">الخريطة</button>
+      </div>
+      <div class="panes">
+        <div class="pane active"><canvas id="chartTrend" height="120"></canvas></div>
+        <div class="pane"><canvas id="chartDomains" height="120"></canvas></div>
+        <div class="pane"><canvas id="chartTags" height="120"></canvas></div>
+        <div class="pane"><canvas id="chartEmails" height="120"></canvas></div>
+        <div class="pane">
+          <div id="mapWrap">
+            <div id="map"></div>
+            <div class="map-legend">
+              <span class="dot withEmail"></span> مع إيميل
+              <span class="dot withoutEmail"></span> بدون إيميل
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- جدول النتائج -->
+    <section class="card">
+      <div class="table-head">
+        <div class="left">
+          <strong>النتائج</strong>
+          <span id="countLabel" class="muted"></span>
+        </div>
+        <div class="right">
+          <label>الصفحة</label>
+          <input id="page" type="number" min="1" value="1"/>
+          <label>حجم الصفحة</label>
+          <select id="pageSize">
+            <option>25</option>
+            <option selected>50</option>
+            <option>100</option>
+            <option>250</option>
+          </select>
+          <button id="btnPagePrev" class="btn">◀</button>
+          <button id="btnPageNext" class="btn">▶</button>
+        </div>
+      </div>
+
+      <div class="scroll">
+        <table class="tbl" id="tbl">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>التاريخ</th>
+              <th>العنوان</th>
+              <th>الموقع</th>
+              <th>الدومين</th>
+              <th>الهاشتاج</th>
+              <th>الإيميلات</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- إعداد المصدر -->
+    <section class="card">
+      <h3>إعدادات المصدر والتهيئة</h3>
+      <p class="muted">بدّل المصدر من موك محلي إلى REST API.</p>
+      <div class="row">
+        <div>
+          <label>DATA_URL (اختياري)</label>
+          <input id="dataUrl" placeholder="https://your.api/jobs?from=...&to=..." />
+        </div>
+        <div>
+          <label>Token (إن لزم)</label>
+          <input id="apiToken" placeholder="Bearer …" />
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>حقل التاريخ في الداتا</label>
+          <input id="dateField" value="postedAt" />
+        </div>
+        <div>
+          <label>مهلة الطلب (ms)</label>
+          <input id="timeout" type="number" value="20000" />
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">Vanilla JS + Leaflet + Chart.js — جاهز للتخصيص والاستهلاك من API. © JobFlow
+   © JobFlow — <a href="about.html" style="color:var(--alt)">عن المبرمج</a>
+  </footer>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>

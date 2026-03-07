@@ -1,0 +1,53 @@
+public final class Constants {
+
+    private Constants() {} // يمنع إنشاء object
+
+    public static final String QueryOFSuadiArabicJobs =
+    		"WITH last_jobs AS (\r\n"
+    		+ "            SELECT\r\n"
+    		+ "                Hashed_Job_Describtion,\r\n"
+    		+ "                Encrypted_Job_Description,\r\n"
+    		+ "                PlainText_Job_Description,\r\n"
+    		+ "                Attached_Emails,\r\n"
+    		+ "                Profile_ID,\r\n"
+    		+ "                Source,\r\n"
+    		+ "                Scrapped_Date,\r\n"
+    		+ "                Scrapped_Version,\r\n"
+    		+ "                Time_Input_The_System,\r\n"
+    		+ "                SQL_generated_HMD5,\r\n"
+    		+ "                dkey\r\n"
+    		+ "            FROM jobs\r\n"
+    		+ "            ORDER BY dkey DESC\r\n"
+    		+ "            LIMIT 480000\r\n"
+    		+ "        )\r\n"
+    		+ "        SELECT *\r\n"
+    		+ "        FROM last_jobs\r\n"
+    		+ "        WHERE\r\n"
+    		+ "            PlainText_Job_Description REGEXP\r\n"
+    		+ "            '(الرياض|جدة|مكة|تبوك|القصيم|أبها|رابغ|الدمام|الطائف|جازان|المدينة|سعودي|سعودى)'\r\n"
+    		+ "            AND PlainText_Job_Description REGEXP '[؀-ۿ]'\r\n"
+    		+ "        ORDER BY Scrapped_Date DESC";
+
+    
+    
+    
+    public static final String QueryOFArabicJavaJobs =
+     "SELECT *\r\n"
+     + "        FROM jobs\r\n"
+     + "        WHERE\r\n"
+     + "            PlainText_Job_Description REGEXP\r\n"
+     + "            '(Java|Spring|Kafka|Hibernate)'\r\n"
+     + "            AND PlainText_Job_Description REGEXP '[؀-ۿ]'\r\n"
+     + "        ORDER BY Scrapped_Date DESC";
+    
+    
+    
+    
+    public static final String QueryOFLast30000Jobs = "SELECT * FROM jobs order by dkey desc LIMIT 30000";
+    
+    
+    
+    
+    
+    
+}

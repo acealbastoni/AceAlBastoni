@@ -1,0 +1,103 @@
+body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    display: flex;
+    height: 100vh;
+    background-color: #f9f9f9;
+    direction: rtl;
+}
+
+.sidebar {
+    width: 220px;
+    background-color: #efefef;
+    padding: 20px;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+}
+
+.sidebar h2 {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    padding: 10px 0;
+    color: #555;
+    cursor: pointer;
+}
+
+.sidebar li.active {
+    font-weight: bold;
+    color: #000;
+}
+
+.main-content {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+header h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.draft {
+    background-color: #ccc;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.message-box {
+    text-align: center;
+    background: white;
+    border: 1px solid #ddd;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    max-width: 90%;
+}
+
+.message-box .icon {
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+.message-box button {
+    padding: 10px 20px;
+    background-color: #10a37f;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.message-box button:hover {
+    background-color: #0d8465;
+}
+
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        box-shadow: none;
+    }
+
+    .main-content {
+        padding: 20px;
+    }
+}

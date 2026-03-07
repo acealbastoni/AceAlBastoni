@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Diagram</title>
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border: 1px solid #ccc;
+        }
+
+        .block {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            border: 2px solid #000;
+            border-radius: 5px;
+            cursor: move;
+            text-align: center;
+        }
+
+        .electron {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: red;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <!-- Components (Images Represented as Blocks) -->
+        <div class="block" style="left: 100px; top: 100px;" id="block1">Component 1</div>
+        <div class="block" style="left: 400px; top: 100px;" id="block2">Component 2</div>
+        <div class="block" style="left: 700px; top: 100px;" id="block3">Component 3</div>
+
+        <!-- Electron (Animated Dot) -->
+        <div class="electron" id="electron"></div>
+    </div>
+
+    <script>
+        // Drag and Drop Functionality with Interact.js
+        interact('.block').draggable({
+            listeners: {
+                move(event) {
+                    const target = event.target;
+                    const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                    const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+                    target.style.transform = `translate(${x}px, ${y}px)`;
+                    target.setAttribute('data-x', x);
+                    target.setAttribute('data-y', y);
+                }
+            }
+        });
+
+        // Electron Animation with Anime.js
+        const electron = document.querySelector('#electron');
+
+        function animateElectron() {
+            anime({
+                targets: electron,
+                translateX: [
+                    { value: 100, duration: 1000 },
+                    { value: 400, duration: 1000 },
+                    { value: 700, duration: 1000 }
+                ],
+                translateY: 50,
+                loop: true,
+                easing: 'linear'
+            });
+        }
+
+        animateElectron();
+
+        // Dynamically Add Components
+        const container = document.getElementById('container');
+        let counter = 4;
+
+        document.addEventListener('dblclick', (e) => {
+            const newBlock = document.createElement('div');
+            newBlock.classList.add('block');
+            newBlock.style.left = `${e.clientX - 50}px`;
+            newBlock.style.top = `${e.clientY - 50}px`;
+            newBlock.id = `block${counter}`;
+            newBlock.innerHTML = `Component ${counter++}`;
+            container.appendChild(newBlock);
+
+            interact(newBlock).draggable({
+                listeners: {
+                    move(event) {
+                        const target = event.target;
+                        const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                        const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+                        target.style.transform = `translate(${x}px, ${y}px)`;
+                        target.setAttribute('data-x', x);
+                        target.setAttribute('data-y', y);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

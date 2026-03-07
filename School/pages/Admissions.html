@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admissions</title>
+    <link rel="stylesheet" href="../css/Admissions.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <h1>Admissions Management</h1>
+        </nav>
+    </header>
+    <main>
+        <section class="admissions-overview">
+            <h2>Admissions Overview</h2>
+            <p>Manage and monitor student admissions efficiently.</p>
+            <div class="cards">
+                <div class="card">
+                    <h3>New Applications</h3>
+                    <p><span id="new-applications">25</span> pending</p>
+                </div>
+                <div class="card">
+                    <h3>Approved Applications</h3>
+                    <p><span id="approved-applications">10</span> approved</p>
+                </div>
+                <div class="card">
+                    <h3>Rejected Applications</h3>
+                    <p><span id="rejected-applications">5</span> rejected</p>
+                </div>
+            </div>
+        </section>
+        <section class="admissions-actions">
+            <h2>Admissions Actions</h2>
+            <button onclick="openAddAdmissionForm()">Add New Admission</button>
+            <button onclick="viewAllAdmissions()">View All Applications</button>
+        </section>
+        <section id="admission-form-section" class="hidden">
+            <h2>Add New Admission</h2>
+            <form id="admission-form">
+                <label for="student-name">Student Name:</label>
+                <input type="text" id="student-name" name="student-name" required>
+
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" required>
+
+                <label for="parent-name">Parent/Guardian Name:</label>
+                <input type="text" id="parent-name" name="parent-name" required>
+
+                <label for="contact">Contact Number:</label>
+                <input type="text" id="contact" name="contact" required>
+
+                <label for="grade">Applying for Grade:</label>
+                <select id="grade" name="grade" required>
+                    <option value="">Select Grade</option>
+                    <option value="1">Grade 1</option>
+                    <option value="2">Grade 2</option>
+                    <option value="3">Grade 3</option>
+                    <option value="4">Grade 4</option>
+                </select>
+
+                <label for="notes">Additional Notes:</label>
+                <textarea id="notes" name="notes"></textarea>
+
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 School Management System. All rights reserved.</p>
+    </footer>
+    <script>
+        function openAddAdmissionForm() {
+            document.getElementById('admission-form-section').classList.remove('hidden');
+        }
+
+        function viewAllAdmissions() {
+            alert("Redirecting to the list of all admissions...");
+            // Implement logic to redirect to the list of admissions or fetch them dynamically.
+        }
+    </script>
+</body>
+
+</html>

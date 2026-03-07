@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>📊 Scrapped Jobs Over Time</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #chartContainer {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 1000px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chartContainer">
+        <h2>📈 First Hour and Half - Job Scrapping</h2>
+        <canvas id="lineChart"></canvas>
+    </div>
+    <script>
+        const ctx = document.getElementById('lineChart').getContext('2d');
+        const data = {
+            labels: ['2025-07-26 00:00:17', '2025-07-26 01:31:37', '2025-07-26 01:31:57', '2025-07-26 01:32:17', '2025-07-26 01:32:37'],
+            datasets: [{
+                label: 'Job Count',
+                data: [0, 1167, 1171, 1171, 1171],
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 3,
+                pointRadius: 4,
+                pointBackgroundColor: '#fff',
+                pointBorderColor: 'rgba(75, 192, 192, 1)',
+                fill: true,
+                tension: 0.3
+            }]
+        };
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#fff',
+                            font: { size: 14 }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#333',
+                        titleColor: '#fff',
+                        bodyColor: '#ddd'
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: '#fff' },
+                        grid: { color: 'rgba(255,255,255,0.1)' },
+                        title: {
+                            display: true,
+                            text: 'Timestamp',
+                            color: '#fff'
+                        }
+                    },
+                    y: {
+                        ticks: { color: '#fff' },
+                        grid: { color: 'rgba(255,255,255,0.1)' },
+                        title: {
+                            display: true,
+                            text: 'Number Of Jobs Scrapped',
+                            color: '#fff'
+                        },
+                        beginAtZero: false
+                    }
+                }
+            }
+        };
+        new Chart(ctx, config);
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background: #2a9d8f;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+}
+
+main {
+    padding: 2rem;
+}
+
+.cards {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.card {
+    background: #e9ecef;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    flex: 1;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button {
+    background: #2a9d8f;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    margin: 0.5rem 0;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #21867a;
+}
+
+.hidden {
+    display: none;
+}
+
+form {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+label {
+    font-weight: bold;
+}
+
+input, select, textarea {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    width: 100%;
+}
+
+footer {
+    background: #f4f4f4;
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2rem;
+}

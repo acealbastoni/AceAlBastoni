@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Diagram</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .diagram-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background-color: white;
+            overflow: hidden;
+        }
+        .node {
+            position: absolute;
+            width: 150px;
+            height: 100px;
+            border: 0px solid red;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* background-color: #fff; */
+            /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+        }
+        .connector {
+    position: absolute;
+    background-image: linear-gradient(to right, black 50%, transparent 50%);
+    background-size: 20px 4px; /* Increased size for better visibility */
+    height: 4px; /* Increased height to make the dotted effect clearer */
+    transform-origin: top left;
+    animation: moveDotted 1s linear infinite;
+}
+@keyframes moveDotted {
+    100% {
+        background-position: 0 0;
+    }
+    0% {
+        background-position: -20px 0; /* Moves background left to create the illusion of motion */
+    }
+}
+
+
+        .label {
+            position: absolute;
+            background-color: white;
+            padding: 2px 5px;
+            font-size: 12px;
+            font-weight: bold;
+            transform: translate(-50%, -50%);
+        }
+        .electron {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: blue;
+            border-radius: 50%;
+            animation: moveElectronHorizontal 2s linear infinite;
+        }
+        .electron-top {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: blue;
+            border-radius: 50%;
+            animation: moveElectronHorizontal-top 2s linear infinite;
+        } 
+        .electron.vertical {
+            animation: moveElectronVertical 2s linear infinite;
+        }
+
+        @keyframes moveElectronHorizontal {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(calc(200px * cos(45deg)), calc(200px * sin(45deg))); /* Adjust the length and angle */
+            }
+        }
+
+        @keyframes moveElectronHorizontal-top {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(calc(200px * cos(-45deg)), calc(200px * sin(-45deg))); /* Adjust the length and angle */
+            }
+        }
+        
+
+
+        @keyframes moveElectronVertical {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(0, 150px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="diagram-container">
+        <!-- Nodes -->
+        <div class="node" id="node1" style="top: 100px; left: 50px;">
+            <img src="1.png" alt="AceAlBastoni" style="max-width: 100%; max-height: 70%;">
+            <span>Encrypted</span>
+        </div>
+        <div class="node" id="node1.1" style="top: 300px; left: 50px;">
+            <img src="images/1.png" alt="AceAlBastoni" style="max-width: 100%; max-height: 70%;">
+            <span>plain Text</span>
+        </div>
+
+        <div class="node" id="node2" style="top: 202px; left: 225px;">
+            <img src="images/2.png" alt="LinkedIn Full Post" style="max-width: 100%; max-height: 70%;">
+            <span>LinkedIn Post</span>
+        </div>
+        <div class="node" id="node3" style="top: 300px; left: 300px;">
+            <img src="images/3.bmp" alt="Linked Data" style="max-width: 100%; max-height: 70%;">
+            <span>Linked Data</span>
+        </div>
+
+
+
+
+
+        <!-- Connectors -->
+        <div class="connector" id="connector1" style="width: 130px; height: 1px; top: 140px; left: 150px; transform: rotate(45deg);" ></div>
+        <div class="electron-top" style="top: 335px; left: 150px;"></div>
+
+        <div class="connector" id="connector1" style="width: 130px; height: 1px; top: 340px; left: 150px; transform: rotate(-45deg);" ></div>
+        <div class="electron" style="top: 135px; left: 150px;"></div>
+
+
+
+        <div class="connector" id="connector2" style="width: 2px; height: 150px; top: 150px; left: 440px;"></div>
+        <div class="electron vertical" style="top: 150px; left: 350px;"></div>
+
+     
+        <!-- Labels -->
+        <div class="label" style="top: 65px; left: 250px;">PUSH</div>
+        <div class="label" style="top: 175px; left: 355px;">STOPPED NOW</div>
+    </div>
+
+    <script>
+        // You can dynamically set image paths here
+        document.getElementById('node1').querySelector('img').src = 'images/1.png';
+        document.getElementById('node2').querySelector('img').src = 'images/2.png';
+        document.getElementById('node3').querySelector('img').src = 'images/3.bmp';
+    </script>
+</body>
+</html>
+
+
+15 oct 15 Nov     1
+15 Nov - 15 Dec   2
+15 Dec - 15 Jan   3

@@ -1,0 +1,3 @@
+model\Job.class
+utils\DBConnection.class
+JobImporterApp.class

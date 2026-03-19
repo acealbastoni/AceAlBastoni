@@ -1354,11 +1354,19 @@ public final class Constants {
     
     
     public static final String _12_QueryOfSaudiRemoteJavaJobs =
-    	    "SELECT * " +
-    	    "FROM jobs " +
-    	    "WHERE Scrapped_Date >= (CURRENT_DATE - INTERVAL 35 DAY) " +
-    	    "  AND Scrapped_Date <  (CURRENT_DATE + INTERVAL 1 DAY) " +
-    	    "ORDER BY dkey DESC";
-    
+//    	    "SELECT * " +
+//    	    "FROM jobs " +
+//    	    "WHERE Scrapped_Date >= (CURRENT_DATE - INTERVAL 4 DAY) " +
+//    	    "  AND Scrapped_Date <  (CURRENT_DATE + INTERVAL 1 DAY) " +
+//    	    "ORDER BY dkey DESC";
+    " SELECT *\n"
+    + "FROM jobs\n"
+    + "WHERE Scrapped_Date >= '20260114' \n" //(CURRENT_DATE - INTERVAL 50 DAY)
+    + "  AND Scrapped_Date <  (CURRENT_DATE + INTERVAL 1 DAY)\n"
+    + "  AND LOWER(PlainText_job_Description) REGEXP\n"
+    + "      'SQLSERVER|SQL|SQL SERVER|SpringBoot|Spring Boot|spring|REST APIs|REST API|Oracl|Integration|java|software engineer|software developer|java developer|python developer|backend developer|frontend developer|front end developer|full stack developer|web developer|application developer|android developer|ios developer|mobile developer|devops engineer|data engineer|qa engineer|test automation engineer|solutions architect'\n"
+    + "  AND LOWER(PlainText_job_Description) REGEXP\n"
+    + "      'saudi arabia|ksa|riyadh|jeddah|dammam|khobar|makkah|mecca|madinah|medina|jubail|yanbu|abha|taif|qassim|tabuk|najran|hail|jazan'\n"
+    + "ORDER BY dkey DESC; ";
     
 }

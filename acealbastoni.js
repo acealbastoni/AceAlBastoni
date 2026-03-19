@@ -21,6 +21,7 @@ setInterval(() => {
         function elementContainsText(element, text) {
             return element.textContent.includes(text);
         }
+        if (!window.location.href.includes('/feed/')) return;
         const buttons = document.querySelectorAll('button');
         const showMoreButton = Array.from(buttons).find(button => elementContainsText(button, showMoreFeedUpdates));
         if (showMoreButton) {
@@ -456,7 +457,6 @@ const ENCRYPT = false;
 const VERSION = 'V9.0';
 const separator = '████████████████████████████████████████████████████████████████████████████████████████████████████';
 var True_Or_False = true;
-let previousSeparatorCount = 0;
 let separatorCount = 0;
 var lastRunTimestamp = getCurrentTimestamp();
 const startTime = Date.now();
@@ -567,13 +567,24 @@ statusMessageDiv.style.position = 'fixed';
 statusMessageDiv.style.top = '50%';
 statusMessageDiv.style.left = '50%';
 statusMessageDiv.style.transform = 'translate(-50%, -50%)';
-statusMessageDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-statusMessageDiv.style.padding = '10px';
+statusMessageDiv.style.backgroundColor = 'rgba(10, 10, 30, 0.88)';
+statusMessageDiv.style.padding = '18px 22px';
 statusMessageDiv.style.color = 'white';
 statusMessageDiv.style.zIndex = '9999';
+statusMessageDiv.style.borderRadius = '12px';
+statusMessageDiv.style.border = '1px solid #333';
+statusMessageDiv.style.minWidth = '340px';
+statusMessageDiv.style.textAlign = 'center';
 statusMessageDiv.innerHTML = `<pre>     Hello Scrapping Data Started<pre> <br>© AceAlBastoni. All rights reserved.`;
 
 document.body.appendChild(statusMessageDiv);
+
+// Separate persistent counter div — never destroyed by updateStatusMessage()
+var _aceLiveDiv = document.createElement('div');
+_aceLiveDiv.id = 'ace-live-counter';
+_aceLiveDiv.style.cssText = 'position:fixed;bottom:8px;right:12px;z-index:99999;background:rgba(0,0,0,0.75);color:#0ff;font-family:monospace;font-size:13px;padding:4px 10px;border-radius:6px;pointer-events:none;';
+_aceLiveDiv.textContent = '⏱ 0s  |  📧 0  |  💾 0';
+document.body.appendChild(_aceLiveDiv);
 
 function createDimOverlay() {
     const overlay = document.createElement('div');
@@ -673,7 +684,8 @@ function handleKeyDown(event) {
                     function elementContainsText(element, text) {
                         return element.textContent.includes(text);
                     }
-                    const buttons = document.querySelectorAll('button');
+                    if (!window.location.href.includes('/feed/')) return;
+        const buttons = document.querySelectorAll('button');
                     const showMoreButton = Array.from(buttons).find(button => elementContainsText(button, showMoreFeedUpdates));
                     if (showMoreButton) {
                         sleep(1000);
@@ -698,16 +710,78 @@ function handleKeyDown(event) {
 }
 
 function continuousScroll() {
+    // window.scrollBy alone doesn't work on LinkedIn search pages —
+    // they use a custom scroll container. Try all candidates.
     window.scrollBy(0, scrollIncrement);
-    const likeButtons = document.querySelectorAll('button[aria-label^="React Like"]');
-    downFile();
+    document.documentElement.scrollTop += scrollIncrement;
+    document.body.scrollTop += scrollIncrement;
+    var main = document.querySelector('.scaffold-layout__main') ||
+               document.querySelector('main') ||
+               document.querySelector('[data-view-name="search-results"]') ||
+               document.querySelector('.search-results-container');
+    if (main && main.scrollHeight > main.clientHeight) {
+        main.scrollTop += scrollIncrement;
+    }
     removeReactions();
     setTimeout(continuousScroll, 100);
 }
 
-toggleDimScreen();
+toggleDimScreen(); // Dim ON by default — press D to toggle
 document.addEventListener('keydown', handleKeyDown);
 downFile('Force Download');
+
+// Auto-click "… more" on posts to expand truncated content before saving
+(function _initSeeMore() {
+    function _expandAll() {
+        document.querySelectorAll(
+            'button.feed-shared-inline-show-more-text__see-more-less-toggle,' +
+            'button[aria-label*="see more"],' +
+            'span.lt-line-clamp__more,' +
+            '[class*="see-more-less-toggle"]'
+        ).forEach(function(el) { try { el.click(); } catch(e){} });
+    }
+    setInterval(_expandAll, 2500);
+})();
+
+// Live counter — updates every 250ms for high responsiveness
+var _prevLiveCount = -1, _prevSaved = -1, _prevSpeed = -1, _flashTimer = null;
+setInterval(function() {
+    if (typeof scrollIncrement === 'undefined') return;
+    var el = document.getElementById('ace-live-counter');
+    if (!el) return;
+
+    var speed   = Math.abs(scrollIncrement);
+    var dir     = scrollIncrement > 0 ? '▼' : (scrollIncrement < 0 ? '▲' : '■');
+    var elapsed = Math.floor((Date.now() - startTime) / 1000);
+    var mm = Math.floor(elapsed / 60), ss = elapsed % 60;
+    var timeStr = (mm > 0 ? mm + 'm ' : '') + ss + 's';
+
+    // Real-time email scan
+    var _m = (document.body ? document.body.innerText : '').match(/[\w.+-]+@[\w-]+\.[\w.]+/g);
+    var liveCount = _m ? new Set(_m).size : 0;
+
+    // Scroll position
+    var scrollPct = document.documentElement.scrollHeight > window.innerHeight
+        ? Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100)
+        : 0;
+
+    // Flash yellow if new emails found
+    var changed = (liveCount !== _prevLiveCount || separatorCount !== _prevSaved);
+    if (changed) {
+        el.style.background = 'rgba(180,140,0,0.9)';
+        el.style.color = '#fff';
+        clearTimeout(_flashTimer);
+        _flashTimer = setTimeout(function(){ el.style.background = 'rgba(0,0,0,0.75)'; el.style.color = '#0ff'; }, 400);
+    }
+    _prevLiveCount = liveCount; _prevSaved = separatorCount; _prevSpeed = speed;
+
+    el.textContent =
+        '⏱ ' + timeStr +
+        '  |  ' + dir + ' ' + speed + 'px/s' +
+        '  |  📜 ' + scrollPct + '%' +
+        '  |  📧 ' + liveCount +
+        '  |  💾 ' + separatorCount;
+}, 250);
 continuousScroll();
 
 // ████████████████████████████████████████████████████████████████████████████████
@@ -802,21 +876,94 @@ const testEmail = (txt) => /[.\w-]+@([\w-]+\.)+[\w-]+/.test(txt);
 
 let postsSet = new Set();
 
-let postsNodes = [
-    ...document.querySelectorAll('div.update-components-text span span'),
-    ...document.querySelectorAll('div.update-components-text span span span')
-];
+// Check if a line is a LinkedIn post timestamp
+function _isTimestamp(line) {
+    const l = line.trim();
+    // "5m •", "1h •", "2d •", "1w •", "now •"  (single-letter units)
+    if (/^(?:\d+\s*[smhdwy]|now)\s*[\u2022\u00b7\-\|\.]/i.test(l)) return true;
+    // "1mo •", "2mo •"  ← LinkedIn search/content pages use "mo" for month
+    if (/^\d+\s*mo\s*[\u2022\u00b7\-\|\.]/i.test(l)) return true;
+    // "1yr •", "2yr •"  ← year abbreviation
+    if (/^\d+\s*yr\s*[\u2022\u00b7\-\|\.]/i.test(l)) return true;
+    // "5 minutes •", "2 hours •", "1 day •", "1 month •"
+    if (/^\d+\s+(?:second|minute|hour|day|week|month|year)s?\s*[\u2022\u00b7\|]/i.test(l)) return true;
+    // "23 hours ago •", "1 week ago •", "2 days ago •", "1mo ago •"
+    if (/^\d+\s*(?:mo|yr|[smhdwy])?\s*(?:\w+\s+)?ago/i.test(l)) return true;
+    // "Edited •", "• Edited"
+    if (/^(?:edited|just\s+now)\s*[\u2022\u00b7]?$/i.test(l)) return true;
+    return false;
+}
 
-for (const el of postsNodes) {
-    let txt = (el.innerText || "").trim();
+// Check if a line is social footer noise
+const _noiseExact = new Set(['like','comment','repost','send','… more','…more','...more','see more','…see more','follow','connect','view job','reposted','shared this','• reposted','connections','hashtag']);
+const _noisePat   = [/^\d+$/, /^\d+\s*reactions?$/i, /^\d+\s*comments?$/i, /^\d+\s*reposts?$/i, /^\d+\s+connections?\s+work\s+here/i, /^\d+[,\d]*\s*followers?$/i, /^[•·]\s*(1st|2nd|3rd)\+?$/i, /^(1st|2nd|3rd)\+?$/i, /^visible\s+to\s+anyone/i, /^#\w+$/];
+function _isNoise(line) {
+    const lo = line.trim().toLowerCase();
+    return _noiseExact.has(lo) || _noisePat.some(function(p){ return p.test(line.trim()); });
+}
 
-    if (!txt) continue;
-    if (!testEmail(txt)) continue;
 
-    // إزالة "...more"
-    txt = txt.replace(/\.\.\.more\s*$/i, "").trim();
+// Remove embedded LinkedIn job cards (Title / Company / Location / "View job" / "X connections work here")
+function _removeJobCards(arr) {
+    var out = [];
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i].toLowerCase() === 'view job') {
+            var cut = Math.min(out.length, 3);
+            out.splice(out.length - cut, cut);
+            if (i + 1 < arr.length && /^\d+\s+connections?\s+work\s+here/i.test(arr[i + 1])) i++;
+        } else {
+            out.push(arr[i]);
+        }
+    }
+    return out;
+}// Extract clean job content from a block of lines (line-by-line approach)
+function _extractFromBlock(lines) {
+    // Find all timestamp line indices
+    const tsIndices = [];
+    for (let i = 0; i < lines.length; i++) {
+        if (_isTimestamp(lines[i])) tsIndices.push(i);
+    }
 
-    if (txt.length > 0) postsSet.add(txt);
+    // Build segments: each segment starts AFTER a timestamp line
+    const segments = [];
+    if (tsIndices.length === 0) {
+        // No timestamp found — use the whole block as-is
+        segments.push({ start: 0, end: lines.length });
+    } else {
+        for (let t = 0; t < tsIndices.length; t++) {
+            const start = tsIndices[t] + 1;
+            const end   = t + 1 < tsIndices.length ? tsIndices[t + 1] : lines.length;
+            if (start < end) segments.push({ start: start, end: end });
+        }
+    }
+
+    const results = [];
+    for (const seg of segments) {
+        // Find social footer (Like/Comment/Repost) end boundary
+        let endIdx = seg.end;
+        for (let i = seg.start; i < seg.end; i++) {
+            if (/^\d+\s*reactions?$/i.test(lines[i]) || lines[i] === 'Like' || lines[i] === 'Comment' || lines[i] === 'Repost') {
+                endIdx = i; break;
+            }
+        }
+        const cleaned = _removeJobCards(lines.slice(seg.start, endIdx)
+            .filter(function(l){ return l.length > 0 && !_isNoise(l); }))
+            .join('\n').trim();
+        if (cleaned.length > 10 && testEmail(cleaned)) results.push(cleaned);
+    }
+    return results;
+}
+
+// Split bodyText into post blocks by "Feed post" marker
+let _blocks = bodyText.split('Feed post');
+if (_blocks.length <= 1) _blocks = bodyText.split(/\n{2,}/);
+
+for (let _block of _blocks) {
+    _block = _block.trim();
+    if (_block.length < 10) continue;
+    const _lines = _block.split('\n').map(function(l){ return l.trim(); });
+    const _results = _extractFromBlock(_lines);
+    _results.forEach(function(r){ postsSet.add(r); });
 }
 
 let posts = Array.from(postsSet);
@@ -857,20 +1004,24 @@ let content = posts
     updateStatusMessage();
 
     let currentSecondDigit  = separatorCount;
-    let previousSecondDigit = previousSeparatorCount;
 
     // ==========================================
     // 6) شروط الداونلود:
-    //    - فرق في العداد > 10
+    //    - تغيّر خانة العشرات مقارنةً بآخر قيمة مخزّنة في localStorage
     //    - أو استدعاء من الكيبورد (F)
     //    - أو استدعاء Force (AUTO_HOME/AUTO_REFRESH/Force Download)
     //    - أو مرّ وقت طويل
     // ==========================================
+    const currentTens  = Math.floor(currentSecondDigit / 10);
+    const lastTens     = parseInt(localStorage.getItem('lastDownloadTens') || '-1', 10);
+    const tensChanged  = currentTens > lastTens;
+
     if (
-        (currentSecondDigit - previousSecondDigit > 10) ||
+        tensChanged ||
         forceDownload ||
         (getCurrentTimestamp() - lastRunTimestamp > 150000)
     ) {
+        localStorage.setItem('lastDownloadTens', currentTens);
         previousSecondDigit = currentSecondDigit;
         lastRunTimestamp    = getCurrentTimestamp();
 
@@ -893,7 +1044,6 @@ let content = posts
             link.click();
         }
 
-        previousSeparatorCount = separatorCount;
     }
 
     return { blob, url, link };
@@ -978,18 +1128,27 @@ function updateStatusMessage() {
     const elapsedTimeInSeconds = Math.floor((Date.now() - startTime) / 1000);
     
     statusMessageDiv.innerHTML = `
-        <div style="display: flex; flex-direction: column; align-items: center;">
-            <div>Scrapping Running:${elapsedTimeInSeconds} ${direction === 1 ? (scrollIncrement + " Down ▼") : (scrollIncrement + " :UP")} \n -Current Number of Jobs:${separatorCount}</div>
-            <div>© AceAlBastoni. All rights reserved.</div>
-            <div style="margin-top: 20px; position: relative; width: 200px; height: 200px; border-radius: 50%; background-color: #f0f0f0; overflow: hidden;">
-                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 100%;">
-                    <div style="font-size: 16px; color: ${speedometerColor};">Speed</div>
-                    <div style="font-size: 36px; font-weight: bold; color: ${speedometerColor};">${speed} px/s</div>
-                </div>
-                <div id="hourHand" style="position: absolute; top: 50%; left: 50%; width: 2px; height: 60%; background-color: ${speedometerColor}; transform-origin: 0% 50%; transition: transform 0.5s;"></div>
-                <div id="minuteHand" style="position: absolute; top: 50%; left: 50%; width: 80%; height: 2px; background-color: ${speedometerColor}; transform-origin: 100% 50%; transition: transform 0.5s;"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;font-family:monospace;min-width:320px;">
+            <div style="font-size:15px;font-weight:bold;margin-bottom:4px;color:#fff;">
+                ⏱ ${elapsedTimeInSeconds}s &nbsp;|&nbsp; ${direction === 1 ? ('▼ ' + speed + ' px/s') : ('▲ ' + speed + ' px/s')}
             </div>
-        </div>-Scraping Duration (seconds):${localStorage.getItem('DurationScrappingTime') / 1000}\n-Link Number: ${JSON.parse(localStorage.getItem('NEXT_URL')).index}
+            <div style="font-size:18px;font-weight:bold;color:#0ff;margin-bottom:6px;">
+                💼 Jobs saved: ${separatorCount}
+            </div>
+            <div style="position:relative;width:260px;height:260px;border-radius:50%;background:#1a1a2e;border:3px solid ${speedometerColor};overflow:hidden;">
+                <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:100%;">
+                    <div style="font-size:20px;color:${speedometerColor};letter-spacing:2px;">SPEED</div>
+                    <div style="font-size:48px;font-weight:bold;color:${speedometerColor};line-height:1.1;">${speed}</div>
+                    <div style="font-size:16px;color:#aaa;">px/s</div>
+                </div>
+                <div id="hourHand" style="position:absolute;top:50%;left:50%;width:3px;height:55%;background:${speedometerColor};transform-origin:0% 50%;transition:transform 0.5s;border-radius:2px;"></div>
+                <div id="minuteHand" style="position:absolute;top:50%;left:50%;width:75%;height:2px;background:${speedometerColor};transform-origin:100% 50%;transition:transform 0.5s;opacity:0.5;"></div>
+            </div>
+            <div style="font-size:12px;color:#aaa;margin-top:6px;">
+                ⏳ ${localStorage.getItem('DurationScrappingTime') / 1000}s &nbsp;|&nbsp; 🔗 #${JSON.parse(localStorage.getItem('NEXT_URL')).index}
+            </div>
+            <div style="font-size:11px;color:#555;margin-top:2px;">© AceAlBastoni</div>
+        </div>
     `;
     
     const hourHand = document.getElementById('hourHand');
@@ -999,12 +1158,12 @@ function updateStatusMessage() {
         hourHand.style.transform = `rotate(${rotationIncrement * direction}deg)`;
         minuteHand.style.transform = `rotate(${rotationIncrement * direction}deg)`;
         
-        setInterval(() => {
-            const currentTime = new Date();
-            const seconds = currentTime.getSeconds();
-            const degrees = (seconds * 6) % 360;
-            hourHand.style.transform = `rotate(${degrees}deg)`;
-        }, 1000);
+        if (!window._aceClockInterval) {
+            window._aceClockInterval = setInterval(function() {
+                const hh = document.getElementById('hourHand');
+                if (hh) hh.style.transform = `rotate(${(new Date().getSeconds()*6)%360}deg)`;
+            }, 1000);
+        }
     }
 }
 

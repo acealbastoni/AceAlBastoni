@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cygpath:*)",
+      "Bash(powershell.exe -File \"C:\\\\Users\\\\Dell\\\\AppData\\\\Local\\\\Temp\\\\fixjs.ps1\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Dell\\\\AppData\\\\Local\\\\Temp\\\\fixjs.ps1\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Dell\\\\AppData\\\\Local\\\\Temp\\\\addui.ps1\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Dell\\\\AppData\\\\Local\\\\Temp\\\\fixscroll.ps1\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Dell\\\\AppData\\\\Local\\\\Temp\\\\fixextract.ps1\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Dell\\\\AppData\\\\Local\\\\Temp\\\\fixpattern.ps1\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Dell\\\\AppData\\\\Local\\\\Temp\\\\fixnoise.ps1\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Dell\\\\AppData\\\\Local\\\\Temp\\\\fix_feedonly.ps1\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Dell\\\\AppData\\\\Local\\\\Temp\\\\fix_extract_bodytext.ps1\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Dell\\\\AppData\\\\Local\\\\Temp\\\\fix_cleanblock.ps1\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Dell\\\\AppData\\\\Local\\\\Temp\\\\fix_timestamp_split.ps1\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Dell\\\\AppData\\\\Local\\\\Temp\\\\fix_linebased.ps1\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Dell\\\\AppData\\\\Local\\\\Temp\\\\fix_scroll_final.ps1\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Dell\\\\AppData\\\\Local\\\\Temp\\\\fix_jobcard.ps1\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Dell\\\\AppData\\\\Local\\\\Temp\\\\fix_all3.ps1\")"
+    ]
+  }
+}
